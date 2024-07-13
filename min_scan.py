@@ -20,14 +20,14 @@ try:
                 if scan_data[xx] < max_dist:
                     max_dist = scan_data[xx]
                     angle_min = xx
-                    if ((315 <= xx <= 360) or (0 <= xx <= 45)):
-                        real_dist = (max_dist) * (math.cos(math.radians(angle_min)))
-                        print('\nreal_dis: ', real_dist, ' | lidar_dis:', max_dist, ' | angle: ', angle_min) 
+                    # if ((315 <= xx <= 360) or (0 <= xx <= 45)):
+                    #     real_dist = (max_dist) * (math.cos(math.radians(angle_min)))
+                    #     print('\nreal_dis: ', real_dist, ' | lidar_dis:', max_dist, ' | angle: ', angle_min) 
                         # print (angle_min)
 
                     # index = int(angle_min/5)                
         # print (scan_data)
-        # print('\ndis: ', max_dist, ' |  angle: ', angle_min)
+        print('\ndis: ', max_dist, ' |  angle: ', angle_min)
 
     # min(scan_data)
 except KeyboardInterrupt:print('Stoping.')
