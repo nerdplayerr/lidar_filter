@@ -1,7 +1,8 @@
 import math
 from math import floor
 from rplidar import RPLidar
-import mqtt_publisher   
+import mqtt_publisher
+from statistics import mean   
 
 lidar = RPLidar('/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0')
 scan_data = [0] * 360
@@ -38,8 +39,8 @@ def determine_values(distance):
         return "03"
     elif 1500 < distance <= 2000:
         return "04"
-    else:
-        return "00"
+    # else:
+    #     return ""
 
 # Function to create the data string based on the side and distance
 def create_data_string(side, min_distance):
@@ -112,11 +113,12 @@ try:
         data_right.clear()
 
         for (_, angle, distance) in scan:
-            xx = min(359, floor(angle))
-            scan_data[xx] = distance
+            if distance <= 2000:
+                xx = min(359, floor(angle))
+                scan_data[xx] = distance
 
             # Classify and store distance in respective list
-            classify_and_store(xx, distance)
+                classify_and_store(xx, distance)
 
         # Combine all data into one list
         all_data = [data_front, data_fl, data_fr, data_left, data_right]
@@ -126,17 +128,18 @@ try:
         # Check each list and create data string based on distance
         for data, side in zip(all_data, all_sides):
             if data:  # Check if the list is not empty
-                min_distance = min(data)
+                min_distance = mean(data)
                 data_string = create_data_coordinate(side, min_distance)
                 data_strings.append(data_string)
             # else:
                 # data_strings.append(None)
 
         # Print all data strings
+        # print(all_data)
         # print('Data strings:', data_strings)
 
         # Send Every 1 sec
-        if(buffer > 10):
+        if(buffer > 50):
             print('Data strings:', f"A55A230{len(data_strings)}0{''.join(data_strings)}")
             mqtt_publisher.publish(client,f"A55A230{len(data_strings)}0{''.join(data_strings)}")
             buffer = 0
