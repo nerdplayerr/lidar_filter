@@ -18,7 +18,7 @@ buffer = 0
 
 # Function to classify the angle and store the distance in the respective list
 def classify_and_store(angle, distance):
-    if (331 <= angle <= 360) or (0 <= angle <= 30):
+    if (350 <= angle <= 360) or (0 <= angle <= 10):
         data_front.append(distance)
     elif 301 <= angle <= 330:
         data_fl.append(distance)
